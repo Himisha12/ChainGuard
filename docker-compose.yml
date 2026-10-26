@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  chainguard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chainguard-api
+    ports:
+      - "8000:8000"
+    environment:
+      - CHAINGUARD_ENVIRONMENT=production
+      - CHAINGUARD_OLLAMA__BASE_URL=http://ollama:11434
+      - CHAINGUARD_OLLAMA__MODEL=llama3.1:8b
+      - CHAINGUARD_DATABASE__CHECKPOINT_DB=/app/data/checkpoints.sqlite
+    volumes:
+      - chainguard-data:/app/data
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: chainguard-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+volumes:
+  chainguard-data:
+  ollama-models:

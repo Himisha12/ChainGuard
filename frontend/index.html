@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChainGuard AI — Autonomous Multi-Agent Security & Dependency Guardian</title>
+    <meta name="description" content="AI-powered dependency vulnerability scanner with LangGraph state machine, NetworkX knowledge graph, and Human-in-the-Loop approval gate.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="dark-theme">
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="app-layout">
+        <!-- Top Navigation Bar -->
+        <header class="navbar glass-panel">
+            <div class="nav-left">
+                <div class="logo-group">
+                    <div class="logo-shield">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M9 12l2 2 4-4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">ChainGuard<span class="gradient-text">.AI</span></span>
+                        <span class="logo-subtitle">Multi-Agent Security Engine</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-center">
+                <div class="health-beacon" id="healthBeacon">
+                    <span class="beacon-dot pulse-emerald"></span>
+                    <span class="beacon-label">System Active &bull; LangGraph v0.4 &bull; SQLite Verified</span>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <div class="tenant-selector glass-pill">
+                    <span class="pill-label">Tenant:</span>
+                    <select id="tenantSelect">
+                        <option value="tenant-alpha">AcmeCorp Cloud</option>
+                        <option value="tenant-beta">FinTech Core</option>
+                        <option value="tenant-internal">SecOps Internal</option>
+                    </select>
+                </div>
+                <div class="role-badge" id="roleBadge">
+                    <span class="role-indicator"></span>
+                    <span id="roleText">APPROVER</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Subnav View Switcher -->
+        <nav class="subnav-tabs">
+            <button class="tab-btn active" id="tabChainGuard">
+                <span>🛡️</span> ChainGuard Security Guardian <span class="tab-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--emerald);">Vulnerability Scanner</span>
+            </button>
+            <button class="tab-btn" id="tabOpsPilot">
+                <span>⚡</span> OpsPilot SRE Incident Response <span class="tab-badge">Autonomous SRE</span>
+            </button>
+        </nav>
+
+        <!-- ═════════ VIEW 1: ChainGuard Security Scanner ═════════ -->
+        <div id="viewChainGuard" class="view-content active">
+            <!-- Main Content Grid -->
+            <main class="main-container">
+
+            <!-- Stat Metric Cards -->
+            <section class="metrics-grid">
+                <div class="stat-card glass-panel" id="statScans">
+                    <div class="stat-header">
+                        <span class="stat-title">Total Scans Audited</span>
+                        <div class="stat-icon icon-cyan">⚡</div>
+                    </div>
+                    <div class="stat-value" id="valTotalScans">24</div>
+                    <div class="stat-meta text-emerald">↑ 100% verified trace persistence</div>
+                </div>
+
+                <div class="stat-card glass-panel" id="statVulns">
+                    <div class="stat-header">
+                        <span class="stat-title">Vulnerabilities Detected</span>
+                        <div class="stat-icon icon-rose">🛡️</div>
+                    </div>
+                    <div class="stat-value text-rose" id="valTotalVulns">8</div>
+                    <div class="stat-meta text-muted">2 Critical &bull; 4 High &bull; 2 Medium</div>
+                </div>
+
+                <div class="stat-card glass-panel" id="statBlast">
+                    <div class="stat-header">
+                        <span class="stat-title">Avg Blast Radius</span>
+                        <div class="stat-icon icon-amber">🕸️</div>
+                    </div>
+                    <div class="stat-value text-amber" id="valBlastRadius">3.2</div>
+                    <div class="stat-meta text-muted">Downstream dependencies analyzed</div>
+                </div>
+
+                <div class="stat-card glass-panel" id="statHITL">
+                    <div class="stat-header">
+                        <span class="stat-title">HITL Safety Gates</span>
+                        <div class="stat-icon icon-violet">🔒</div>
+                    </div>
+                    <div class="stat-value text-violet" id="valSafetyGates">100%</div>
+                    <div class="stat-meta text-emerald">Zero unauthorized breaking upgrades</div>
+                </div>
+            </section>
+
+            <!-- Dual Panel: Scan Launcher & Agent ReAct Visualizer -->
+            <section class="workspace-grid">
+                <!-- Left Panel: Input & Manifest Launchpad -->
+                <div class="panel glass-panel scan-launcher">
+                    <div class="panel-header">
+                        <div class="panel-title-group">
+                            <h2 class="panel-title">Manifest Launchpad</h2>
+                            <p class="panel-subtitle">Upload requirements.txt or pyproject.toml</p>
+                        </div>
+                        <div class="sample-actions">
+                            <button class="btn btn-ghost btn-sm" id="btnLoadVulnerable">
+                                Load Vulnerable Demo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dropzone -->
+                    <div class="upload-dropzone" id="dropZone">
+                        <input type="file" id="fileInput" accept=".txt,.toml" class="file-hidden">
+                        <div class="dropzone-content">
+                            <div class="dropzone-icon">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <span class="dropzone-text">Drag & drop dependency manifest, or <span class="highlight">browse files</span></span>
+                            <span class="dropzone-hint">Supports requirements.txt, pyproject.toml (PEP 621 & Poetry)</span>
+                        </div>
+                    </div>
+
+                    <!-- Manifest Editor -->
+                    <div class="manifest-editor-group">
+                        <div class="editor-header">
+                            <span class="editor-label">Raw Manifest Content</span>
+                            <span class="editor-lang" id="detectedFormat">requirements.txt</span>
+                        </div>
+                        <textarea id="manifestInput" class="code-editor" placeholder="flask==2.0.0
+requests==2.25.0
+django==3.2.0
+urllib3==1.26.4
+jinja2==2.11.2"></textarea>
+                    </div>
+
+                    <!-- Project Config -->
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="projectNameInput">Project Tag</label>
+                            <input type="text" id="projectNameInput" class="text-input" value="Production-Web-Core">
+                        </div>
+                        <div class="form-field">
+                            <label for="securityProfileSelect">Guardrail Strictness</label>
+                            <select id="securityProfileSelect" class="text-input">
+                                <option value="strict">Strict (Injection Scan + Redaction)</option>
+                                <option value="standard">Standard Production</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-block btn-lg" id="btnRunScan">
+                        <span class="btn-icon">🚀</span> Run Multi-Agent Autonomous Scan
+                    </button>
+                </div>
+
+                <!-- Right Panel: Agent ReAct Workflow & Trace Stream -->
+                <div class="panel glass-panel trace-visualizer">
+                    <div class="panel-header">
+                        <div class="panel-title-group">
+                            <h2 class="panel-title">LangGraph Agent Trace</h2>
+                            <p class="panel-subtitle">Multi-Agent ReAct Cycle & State Reducer Feed</p>
+                        </div>
+                        <div class="trace-status" id="traceStatusBadge">
+                            <span class="badge badge-neutral">STANDBY</span>
+                        </div>
+                    </div>
+
+                    <!-- Agent Node Stepper Pipeline -->
+                    <div class="pipeline-stepper" id="pipelineStepper">
+                        <div class="step-node active" id="nodeSupervisor">
+                            <div class="node-icon">🧭</div>
+                            <span class="node-name">Supervisor</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-node" id="nodeParser">
+                            <div class="node-icon">📦</div>
+                            <span class="node-name">Parser</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-node" id="nodeRiskAssessor">
+                            <div class="node-icon">⚖️</div>
+                            <span class="node-name">Assessor</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-node" id="nodeInvestigator">
+                            <div class="node-icon">🔍</div>
+                            <span class="node-name">ReAct</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-node" id="nodePlanner">
+                            <div class="node-icon">📋</div>
+                            <span class="node-name">Planner</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-node" id="nodeVerifier">
+                            <div class="node-icon">✅</div>
+                            <span class="node-name">Verifier</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-node" id="nodeApproval">
+                            <div class="node-icon">🛑</div>
+                            <span class="node-name">HITL Gate</span>
+                        </div>
+                    </div>
+
+                    <!-- Live Log Terminal Feed -->
+                    <div class="trace-terminal" id="traceTerminal">
+                        <div class="terminal-line text-muted">[System] ChainGuard agent graph ready. Checkpointer SQLite mounted.</div>
+                        <div class="terminal-line text-muted">[Guardrails] Input sanitizer loaded (Prompt injection & PII regex filter active).</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Section: Findings Table & Dependency Knowledge Graph -->
+            <section class="findings-and-graph-grid">
+                <!-- Findings Matrix -->
+                <div class="panel glass-panel findings-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-group">
+                            <h2 class="panel-title">Vulnerability Findings & Risk Matrix</h2>
+                            <p class="panel-subtitle">Composite scores based on CVSS, Fanout, and SemVer</p>
+                        </div>
+                        <div class="findings-actions">
+                            <button class="btn btn-secondary btn-sm" id="btnExportJSON">Export JSON</button>
+                            <button class="btn btn-secondary btn-sm" id="btnExportMD">Export Markdown</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="findings-table" id="findingsTable">
+                            <thead>
+                                <tr>
+                                    <th>Package</th>
+                                    <th>Installed</th>
+                                    <th>Vulnerability ID</th>
+                                    <th>Severity</th>
+                                    <th>Risk Score</th>
+                                    <th>Target Fix</th>
+                                    <th>Downstream Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody id="findingsTableBody">
+                                <tr>
+                                    <td colspan="7" class="empty-table-state">
+                                        No active scan. Click "Run Multi-Agent Autonomous Scan" to execute.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Knowledge Graph Explorer -->
+                <div class="panel glass-panel graph-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-group">
+                            <h2 class="panel-title">Dependency Knowledge Graph</h2>
+                            <p class="panel-subtitle">NetworkX Blast Radius & Upgrade Traversal</p>
+                        </div>
+                        <div class="graph-legend">
+                            <span class="legend-dot dot-critical"></span> Critical
+                            <span class="legend-dot dot-high"></span> High
+                            <span class="legend-dot dot-safe"></span> Clean
+                        </div>
+                    </div>
+
+                    <div class="graph-canvas-container" id="graphContainer">
+                        <canvas id="depGraphCanvas"></canvas>
+                        <div class="graph-overlay-info" id="graphOverlayInfo">
+                            Hover or click a node to inspect transitive dependents.
+                        </div>
+                    </div>
+                </div>
+            </section>
+            </main>
+        </div><!-- End viewChainGuard -->
+
+        <!-- ═════════ VIEW 2: OpsPilot Autonomous SRE Incident Response ═════════ -->
+        <div id="viewOpsPilot" class="view-content">
+            <main class="main-container">
+                <!-- OpsPilot Metric Cards -->
+                <section class="metrics-grid">
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <span class="stat-title">Active Incident Status</span>
+                            <div class="stat-icon icon-cyan">⚡</div>
+                        </div>
+                        <div class="stat-value" id="valOpsIncidentStatus">STANDBY</div>
+                        <div class="stat-meta text-emerald" id="valOpsIncidentMeta">LangGraph SqliteSaver Checkpointer active</div>
+                    </div>
+
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <span class="stat-title">Persisted Approvals</span>
+                            <div class="stat-icon icon-rose">🛑</div>
+                        </div>
+                        <div class="stat-value text-rose" id="valOpsPendingApprovals">0</div>
+                        <div class="stat-meta text-muted">Survives server restart in dedicated SQLite table</div>
+                    </div>
+
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <span class="stat-title">10-Fact Retention Score</span>
+                            <div class="stat-icon icon-emerald">🧠</div>
+                        </div>
+                        <div class="stat-value text-emerald" id="valOpsFactRetention">10 / 10</div>
+                        <div class="stat-meta text-emerald">100% facts preserved across memory compaction</div>
+                    </div>
+
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <span class="stat-title">Time-Travel Checkpoints</span>
+                            <div class="stat-icon icon-violet">⏳</div>
+                        </div>
+                        <div class="stat-value text-violet" id="valOpsCheckpointsCount">0</div>
+                        <div class="stat-meta text-muted">Replay & side-by-side branch comparison</div>
+                    </div>
+                </section>
+
+                <!-- OpsPilot Workspace -->
+                <section class="workspace-grid">
+                    <!-- Left: Incident Launcher -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2 class="panel-title">Incident Commander</h2>
+                                <p class="panel-subtitle">Trigger autonomous SRE diagnosis & remediation</p>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="opsServiceSelect">Target Degraded Service</label>
+                                <select id="opsServiceSelect" class="text-input">
+                                    <option value="payment-gateway">payment-gateway (HTTP 500 error spike)</option>
+                                    <option value="auth-service">auth-service (Latency degradation)</option>
+                                    <option value="notification-worker">notification-worker (Queue stall)</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="opsSeveritySelect">Severity Level</label>
+                                <select id="opsSeveritySelect" class="text-input">
+                                    <option value="critical" selected>Critical (P0 - Immediate Remediation)</option>
+                                    <option value="high">High (P1 - Priority Escalation)</option>
+                                    <option value="medium">Medium (P2 - Standard Degraded)</option>
+                                    <option value="low">Low (P3 - Minor Anomaly)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="opsDescriptionInput">Incident Symptoms / Description</label>
+                                <input type="text" id="opsDescriptionInput" class="text-input" value="DB connection pool timeout (200ms) exceeded after deploy dep-8921">
+                            </div>
+                        </div>
+
+                        <div style="margin: 12px 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 10px 12px; border-radius: 6px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="chkPlant10Facts" checked style="accent-color: var(--cyan); width: 16px; height: 16px; cursor: pointer;">
+                                <label for="chkPlant10Facts" style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); cursor: pointer;">
+                                    Plant 10 Verification Facts (Test Summarization Fact-Retention)
+                                </label>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-left: 24px; margin-top: 3px; line-height: 1.4;">
+                                Seeds 10 critical operational facts (timestamps, hostnames, error rates, hypotheses) into incident state to test that local LLM memory summarization retains 100% of critical telemetry.
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-block btn-lg" id="btnLaunchOpsIncident">
+                            <span class="btn-icon">⚡</span> Trigger Autonomous Incident Workflow
+                        </button>
+                    </div>
+
+                    <!-- Right: OpsPilot Multi-Agent Pipeline -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2 class="panel-title">OpsPilot Multi-Agent Pipeline</h2>
+                                <p class="panel-subtitle">Bounded Context Delegation & Domain-Specific Toolsets (&le; 4 tools)</p>
+                            </div>
+                            <div class="trace-status" id="opsStatusBadge">
+                                <span class="badge badge-neutral">IDLE</span>
+                            </div>
+                        </div>
+
+                        <!-- Stepper -->
+                        <div class="pipeline-stepper" id="opsPipelineStepper">
+                            <div class="step-node active" id="opsNodeSupervisor">
+                                <div class="node-icon">🧭</div>
+                                <span class="node-name">Supervisor</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-node" id="opsNodeTriage">
+                                <div class="node-icon">🚨</div>
+                                <span class="node-name">Triage (2 tools)</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-node" id="opsNodeLogAnalyst">
+                                <div class="node-icon">📜</div>
+                                <span class="node-name">Log Analyst (3 tools)</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-node" id="opsNodeRemediation">
+                                <div class="node-icon">🔧</div>
+                                <span class="node-name">Remediation (4 tools)</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-node" id="opsNodeGate">
+                                <div class="node-icon">🛑</div>
+                                <span class="node-name">HITL Gate</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <div class="step-node" id="opsNodeVerifier">
+                                <div class="node-icon">✅</div>
+                                <span class="node-name">Verifier (2 tools)</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Terminal -->
+                        <div class="trace-terminal" id="opsTraceTerminal" style="height: 180px;">
+                            <div class="terminal-line text-muted">[OpsPilot] Autonomous SRE Engine ready. Domain-specific tool rules enforced.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pending Approvals & Safety Gates -->
+                <section style="margin-top: 24px;">
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2 class="panel-title">Persisted Pending Approvals & Safety Gates</h2>
+                                <p class="panel-subtitle">Stored in dedicated SQLite table &bull; Survives process restarts &bull; 3 approval modes</p>
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div style="display: inline-flex; background: rgba(0,0,0,0.4); border-radius: 6px; padding: 2px; border: 1px solid rgba(255,255,255,0.08);">
+                                    <button class="btn btn-sm btn-ghost active" id="btnFilterAllApprovals" style="font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;">All Pending (<span id="txtApprovalsCount">0</span>)</button>
+                                    <button class="btn btn-sm btn-ghost" id="btnFilterActiveOnly" style="font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;">Active Incident Only</button>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btnRefreshApprovals">↻ Refresh</button>
+                            </div>
+                        </div>
+
+                        <div class="info-banner" style="background: rgba(6, 182, 212, 0.08); border-left: 3px solid var(--cyan); padding: 9px 14px; margin: 0 16px 12px 16px; border-radius: 4px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                            💡 <strong>Multi-Incident Isolation:</strong> Each row in this table belongs to a separate incident thread. Approving a row executes remediation specifically for <em>that</em> incident and resolves it. Pending rows from past test incidents remain safely stored in SQLite until addressed.
+                        </div>
+
+                        <div class="table-container">
+                            <table class="findings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Approval ID</th>
+                                        <th>Incident</th>
+                                        <th>Action / Tool</th>
+                                        <th>Risk Tier</th>
+                                        <th>Arguments</th>
+                                        <th>Proposed By</th>
+                                        <th>Actions (3 Modes)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="opsApprovalsTableBody">
+                                    <tr>
+                                        <td colspan="7" class="empty-table-state">No pending approvals. Trigger an incident to generate a remediation proposal.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Approvals Table Pagination -->
+                        <div class="table-pagination" id="opsApprovalsPagination">
+                            <div class="pagination-info">
+                                Showing <span id="txtApprovalsRange">0-0</span> of <span id="txtApprovalsTotal">0</span> pending approvals
+                            </div>
+                            <div class="pagination-controls">
+                                <div class="pagination-page-size">
+                                    <label for="selApprovalsPageSize">Per page:</label>
+                                    <select id="selApprovalsPageSize" class="pagination-select">
+                                        <option value="5" selected>5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                </div>
+                                <div class="pagination-nav">
+                                    <button class="btn-page" id="btnApprovalsFirst" title="First Page">«</button>
+                                    <button class="btn-page" id="btnApprovalsPrev" title="Previous Page">‹</button>
+                                    <span class="pagination-status">Page <strong id="txtApprovalsCurrentPage">1</strong> of <strong id="txtApprovalsTotalPages">1</strong></span>
+                                    <button class="btn-page" id="btnApprovalsNext" title="Next Page">›</button>
+                                    <button class="btn-page" id="btnApprovalsLast" title="Last Page">»</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Embedded Interactive CLI Terminal (In-Browser Execution) -->
+                <section style="margin-top: 24px;">
+                    <div class="panel glass-panel" style="border: 1px solid rgba(6, 182, 212, 0.35);">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2 class="panel-title" style="display: flex; align-items: center; gap: 8px;">
+                                    <span>💻</span> Interactive OpsPilot CLI Terminal
+                                    <span class="badge badge-success" style="font-size: 0.7rem; font-weight: 700;">LIVE IN-BROWSER</span>
+                                </h2>
+                                <p class="panel-subtitle">Execute CLI commands directly without switching between browser and VS Code</p>
+                            </div>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <button class="btn btn-secondary btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="runQuickCmd('approvals list')">approvals list</button>
+                                <button class="btn btn-secondary btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="runQuickCmd('audit list')">audit list</button>
+                                <button class="btn btn-secondary btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="runQuickCmd('timetravel list')">timetravel list</button>
+                                <button class="btn btn-secondary btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="runQuickCmd('incident create payment-gateway --desc \'Critical DB latency spike\' --severity critical')">incident create</button>
+                                <button class="btn btn-secondary btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="runQuickCmd('pytest tests/test_opspilot*.py')">run tests</button>
+                                <button class="btn btn-ghost btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="clearWebTerminal()">clear</button>
+                            </div>
+                        </div>
+
+                        <div id="webTerminalWindow" style="background: #090d16; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); padding: 12px; font-family: 'SF Mono', Monaco, Menlo, Consolas, monospace; font-size: 0.8rem; color: #e2e8f0;">
+                            <div id="webTerminalOutput" style="max-height: 220px; overflow-y: auto; white-space: pre-wrap; line-height: 1.5; padding-bottom: 8px;">
+<span style="color: #38bdf8; font-weight: bold;">[OpsPilot In-Browser CLI Terminal Ready]</span>
+Run any CLI command directly here during your demo without opening VS Code!
+Click the quick buttons above or type commands below. Examples:
+  • <span style="color: #a78bfa;">approvals list</span>
+  • <span style="color: #a78bfa;">approve &lt;approval_id&gt; --action approve --operator alice</span>
+  • <span style="color: #a78bfa;">timetravel list inc-xxxxxx</span>
+  • <span style="color: #a78bfa;">audit list</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 6px;">
+                                <span style="color: #38bdf8; font-weight: bold;">opspilot&gt;</span>
+                                <input type="text" id="webTerminalInput" placeholder="Type a command (e.g. approvals list, audit list)..." style="flex: 1; background: transparent; border: none; outline: none; color: #f8fafc; font-family: inherit; font-size: inherit;">
+                                <button class="btn btn-primary btn-sm" id="btnRunTerminalCmd" style="padding: 4px 14px;">Run</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Time-Travel Replay & Fact-Retention Grid -->
+                <section class="checkpoint-facts-grid" style="margin-top: 24px;">
+                    <!-- Time-Travel Checkpoints & Branching -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2 class="panel-title">Time-Travel Checkpoints & Branching</h2>
+                                <p class="panel-subtitle">Fork from an earlier checkpoint with state overrides</p>
+                            </div>
+                        </div>
+
+                        <div id="opsCheckpointsContainer" class="checkpoints-scroll-container">
+                            <p class="text-muted" style="padding: 12px; font-size: 0.85rem;">No checkpoints recorded yet for this session.</p>
+                        </div>
+
+                        <div id="opsBranchComparisonContainer" style="display: none; margin-top: 16px;">
+                            <!-- Populated with side-by-side branch cards -->
+                        </div>
+                    </div>
+
+                    <!-- Structured Facts & Context Memory -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2 class="panel-title">Structured Facts & Context Memory</h2>
+                                <p class="panel-subtitle">Guaranteed never dropped by Summarize-Then-Window compaction</p>
+                            </div>
+                        </div>
+
+                        <div id="opsStructuredFactsDisplay" style="padding: 12px; font-size: 0.84rem; line-height: 1.6;">
+                            <div style="color: var(--text-muted);">Launch an incident to view structured facts and 10 planted verification facts.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Approval Audit Log Table -->
+                <section style="margin-top: 24px;">
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title-group">
+                                <h2 class="panel-title">Immutable Approval Audit Log</h2>
+                                <p class="panel-subtitle">Who approved what, when, with what edits, and checkpoint ID</p>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="findings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Incident</th>
+                                        <th>Operator</th>
+                                        <th>Decision</th>
+                                        <th>Original Args</th>
+                                        <th>Edited Args</th>
+                                        <th>Rejection Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="opsAuditTableBody">
+                                    <tr>
+                                        <td colspan="7" class="empty-table-state">No audit log entries yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Audit Log Table Pagination -->
+                        <div class="table-pagination" id="opsAuditPagination">
+                            <div class="pagination-info">
+                                Showing <span id="txtAuditRange">0-0</span> of <span id="txtAuditTotal">0</span> audit entries
+                            </div>
+                            <div class="pagination-controls">
+                                <div class="pagination-page-size">
+                                    <label for="selAuditPageSize">Per page:</label>
+                                    <select id="selAuditPageSize" class="pagination-select">
+                                        <option value="5" selected>5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                </div>
+                                <div class="pagination-nav">
+                                    <button class="btn-page" id="btnAuditFirst" title="First Page">«</button>
+                                    <button class="btn-page" id="btnAuditPrev" title="Previous Page">‹</button>
+                                    <span class="pagination-status">Page <strong id="txtAuditCurrentPage">1</strong> of <strong id="txtAuditTotalPages">1</strong></span>
+                                    <button class="btn-page" id="btnAuditNext" title="Next Page">›</button>
+                                    <button class="btn-page" id="btnAuditLast" title="Last Page">»</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div><!-- End viewOpsPilot -->
+
+        <!-- OpsPilot HITL Decision Modal -->
+        <div class="modal-backdrop" id="opsDecisionModal">
+            <div class="modal-card glass-panel" style="max-width: 520px;">
+                <div class="modal-header">
+                    <div class="modal-badge-row">
+                        <span class="badge badge-warning" id="opsModalBadge">APPROVAL GATE</span>
+                        <span class="badge badge-outline" id="opsModalApprovalId">ID</span>
+                    </div>
+                    <h3 class="modal-title" id="opsModalTitle">Approval Action</h3>
+                    <p class="modal-desc" id="opsModalDesc">Operator decision prompt</p>
+                </div>
+                <div class="modal-body">
+                    <div id="opsModalEditSection" style="display: none;">
+                        <label style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; display: block;">Modify Tool Arguments (JSON)</label>
+                        <textarea id="opsModalArgsInput" class="code-editor" style="height: 100px;"></textarea>
+                    </div>
+                    <div id="opsModalRejectSection" style="display: none;">
+                        <label style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; display: block;">Rejection Reason (Forces alternative fix proposal)</label>
+                        <input type="text" id="opsModalReasonInput" class="text-input" placeholder="e.g. Rollback too disruptive, update config instead">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="btnCancelOpsModal">Cancel</button>
+                    <button class="btn btn-primary" id="btnConfirmOpsModal">Confirm Decision</button>
+                </div>
+            </div>
+        </div>
+
+
+    <!-- Human-In-The-Loop (HITL) Upgrade Approval Modal -->
+    <div class="modal-backdrop" id="approvalModal">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <div class="modal-badge-row">
+                    <span class="badge badge-warning">HITL SAFETY INTERRUPT</span>
+                    <span class="badge badge-outline">LangGraph Thread #<span id="modalThreadId">thread-default</span></span>
+                </div>
+                <h3 class="modal-title">Upgrade Plan Verification & Approval</h3>
+                <p class="modal-desc">
+                    The autonomous agent proposes the following version upgrades. Major breaking changes require explicit approver authorization.
+                </p>
+            </div>
+
+            <div class="modal-body">
+                <div class="plan-summary-banner" id="planSummaryBanner">
+                    <div class="banner-icon">⚠️</div>
+                    <div class="banner-content">
+                        <strong>Review Required:</strong> <span id="bannerText">Potential major version breaking change detected.</span>
+                    </div>
+                </div>
+
+                <div class="action-items-list" id="modalActionsList">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <div class="feedback-input-group">
+                    <label for="approverFeedback">Approver Remarks / Instructions</label>
+                    <input type="text" id="approverFeedback" class="text-input" placeholder="Approved for staging deployment after automated integration tests.">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="btnRejectPlan">Reject Plan</button>
+                <button class="btn btn-secondary" id="btnEditPlan">Edit Plan Pins</button>
+                <button class="btn btn-success" id="btnApprovePlan">✓ Approve & Neutralize</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
