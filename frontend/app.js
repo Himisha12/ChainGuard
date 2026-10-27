@@ -676,7 +676,7 @@ async function handleLaunchOpsIncident() {
     }
 
     btnLaunch.disabled = true;
-    btnLaunch.innerHTML = '<span class="spinner"></span> Autonomous Remediation In Flight...';
+    btnLaunch.innerHTML = '<span class="spinner"></span> Agent-Driven Remediation In Flight...';
     statusBadge.innerHTML = '<span class="badge badge-warning">DIAGNOSING</span>';
     clearOpsTerminal();
 
@@ -739,7 +739,7 @@ async function handleLaunchOpsIncident() {
         appendOpsLog(`[Error] Failed to trigger incident: ${err.message}`, 'text-rose');
     } finally {
         btnLaunch.disabled = false;
-        btnLaunch.innerHTML = '<span class="btn-icon">⚡</span> Trigger Autonomous Incident Workflow';
+        btnLaunch.innerHTML = '<span class="btn-icon">⚡</span> Trigger Agent-Driven Incident Workflow';
     }
 }
 
